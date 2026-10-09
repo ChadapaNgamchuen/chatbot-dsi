@@ -1,0 +1,6 @@
+streamlit
+python-dotenv
+litellm
+pandas
+dspy
+supabase
