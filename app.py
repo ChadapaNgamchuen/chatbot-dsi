@@ -35,6 +35,10 @@ if "messages" not in st.session_state:
 if "pending_question" not in st.session_state:
     st.session_state.pending_question = None
 
+# Multi-turn chatbot state (e.g. an issue report waiting for details)
+if "chat_state" not in st.session_state:
+    st.session_state.chat_state = {}
+
 
 # =========================
 # Login Page
@@ -137,8 +141,11 @@ def ask_chatbot(question):
         result = process_message(
             user_message=question,
             tester_id=st.session_state.tester_id,
-            conversation_history=conversation_history
+            conversation_history=conversation_history,
+            state=st.session_state.chat_state
         )
+
+    st.session_state.chat_state = result["state"]
 
     interaction_id = save_interaction(
         tester_id=st.session_state.tester_id,
@@ -180,6 +187,7 @@ def show_chat():
         st.session_state.tester_id = None
         st.session_state.messages = []
         st.session_state.pending_question = None
+        st.session_state.chat_state = {}
 
         st.rerun()
 
@@ -242,30 +250,31 @@ def show_chat():
 
                 if form:
 
-                    pdf_relative_path = form.get("pdf_file")
+                    for index, pdf in enumerate(form.get("pdf_files", [])):
 
-                    if pdf_relative_path:
+                        pdf_path = BASE_DIR / pdf["file"]
 
-                        pdf_path = BASE_DIR / pdf_relative_path
+                        try:
+                            pdf_data = pdf_path.read_bytes()
 
-                        if pdf_path.exists():
-
-                            st.download_button(
-                                label="📄 ดาวน์โหลดแบบฟอร์ม PDF",
-                                data=pdf_path.read_bytes(),
-                                file_name=pdf_path.name,
-                                mime="application/pdf",
-                                key=(
-                                    f"download_"
-                                    f"{message['interaction_id']}"
-                                )
-                            )
-
-                        else:
+                        except OSError:
 
                             st.warning(
-                                "ไม่พบไฟล์ PDF ของแบบฟอร์มนี้"
+                                f"ไม่สามารถอ่านไฟล์ PDF: {pdf['label']} "
+                                f"({pdf_path.name})"
                             )
+                            continue
+
+                        st.download_button(
+                            label=f"📄 ดาวน์โหลด{pdf['label']}",
+                            data=pdf_data,
+                            file_name=pdf_path.name,
+                            mime="application/pdf",
+                            key=(
+                                f"download_"
+                                f"{message['interaction_id']}_{index}"
+                            )
+                        )
 
                 # =========================
                 # Response Time
