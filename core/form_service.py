@@ -63,12 +63,37 @@ def get_forms_for_classifier():
     )
 
 
+# "ยังไม่อยากลาออก" must not count as a request to resign
+NEGATIONS = ["ไม่อยาก", "ไม่ต้องการ", "ไม่ได้อยาก", "ไม่คิดจะ", "ไม่ได้จะ", "ไม่"]
+
+
+def _mentions(text, keyword):
+    """
+    True if keyword appears in text without a negation right before it.
+    """
+
+    keyword = keyword.lower()
+    start = text.find(keyword)
+
+    while start != -1:
+
+        before = text[:start].rstrip()
+
+        if not any(before.endswith(neg) for neg in NEGATIONS):
+            return True
+
+        start = text.find(keyword, start + 1)
+
+    return False
+
+
 def score_forms(user_message):
     """
     Keyword scoring for every form.
     Keywords live in forms.json, so staff can add synonyms without code changes.
 
     strong keyword = 2 points, weak keyword = 1 point.
+    Negated keywords ("ไม่อยากลาออก") are ignored.
     Returns candidates sorted by score (highest first).
     """
 
@@ -85,13 +110,13 @@ def score_forms(user_message):
 
         for keyword in rules.get("strong", []):
 
-            if keyword.lower() in text:
+            if _mentions(text, keyword):
                 score += 2
                 matched.append(keyword)
 
         for keyword in rules.get("weak", []):
 
-            if keyword.lower() in text:
+            if _mentions(text, keyword):
                 score += 1
                 matched.append(keyword)
 

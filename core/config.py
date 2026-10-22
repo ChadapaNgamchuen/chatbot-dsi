@@ -35,6 +35,12 @@ LLM_API_KEY = os.getenv(
     ""
 )
 
+# OpenAI-compatible endpoint (e.g. Hugging Face router); empty = provider default
+LLM_API_BASE = os.getenv(
+    "LLM_API_BASE",
+    ""
+).strip()
+
 # "low" = Gemini thinks less -> much faster (~3s vs ~9s).
 # Set to empty string to use the model default.
 LLM_REASONING_EFFORT = os.getenv(

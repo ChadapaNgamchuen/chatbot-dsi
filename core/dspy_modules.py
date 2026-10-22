@@ -2,6 +2,7 @@ from typing import Literal
 from core.config import (
     LLM_MODEL,
     LLM_API_KEY,
+    LLM_API_BASE,
     LLM_REASONING_EFFORT,
     LLM_TIMEOUT,
 )
@@ -27,6 +28,10 @@ lm_kwargs = {
 
 if LLM_REASONING_EFFORT:
     lm_kwargs["reasoning_effort"] = LLM_REASONING_EFFORT
+
+# Hugging Face router etc. (LLM_MODEL must then start with "openai/")
+if LLM_API_BASE:
+    lm_kwargs["api_base"] = LLM_API_BASE
 
 lm = dspy.LM(
     LLM_MODEL,

@@ -64,6 +64,12 @@ FAQ_ADDON_CATEGORIES = {
 
 CANCEL_WORDS = {"ยกเลิก", "ไม่แจ้งแล้ว", "ไม่เป็นไร", "cancel"}
 
+# Asking again for the form that was just recommended
+FILE_REQUEST_WORDS = [
+    "ขอไฟล์", "ส่งไฟล์", "ไฟล์", "ขอฟอร์ม", "ขอแบบฟอร์ม",
+    "ดาวน์โหลด", "โหลด", "ลิงก์", "ลิ้งค์", "pdf",
+]
+
 URGENT_NOTE = (
     "\n\n⚠️ หากเป็นเหตุฉุกเฉินหรือมีความเสี่ยงต่อความปลอดภัย "
     "กรุณาติดต่อเจ้าหน้าที่คณะหรือ รปภ. โดยตรงทันทีค่ะ"
@@ -513,7 +519,27 @@ def route_message(user_message, conversation_history, tester_id, state):
         }, "GENERAL FAST PATH"
 
     # -------------------------
-    # 2. Rule-based router
+    # 2. Follow-up about the previous form ("ขอไฟล์หน่อย")
+    # -------------------------
+
+    last_form = get_form_by_id(state.get("last_form_id"))
+
+    if (
+        last_form
+        and any(word in _normalize(user_message) for word in FILE_REQUEST_WORDS)
+        and not find_form_fast(user_message)
+    ):
+        return {
+            "answer": (
+                f"ได้เลยค่ะ ดาวน์โหลด**{last_form.get('title', last_form['form_name'])}**"
+                f"ได้จากปุ่มด้านล่างนี้ค่ะ"
+            ),
+            "intent": "SOP1",
+            "form": last_form,
+        }, "SOP1 FOLLOW-UP"
+
+    # -------------------------
+    # 3. Rule-based router
     # -------------------------
 
     issue = analyze_issue(user_message)
@@ -632,6 +658,10 @@ def process_message(
             ),
             "intent": "ERROR",
         }
+
+    # Remember the last form so "ขอไฟล์หน่อย" on the next turn knows which one
+    if extra_data.get("form"):
+        state["last_form_id"] = extra_data["form"]["form_id"]
 
     response_time = time.perf_counter() - start_time
 
