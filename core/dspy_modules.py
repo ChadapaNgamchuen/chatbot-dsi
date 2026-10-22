@@ -39,7 +39,11 @@ lm = dspy.LM(
     **lm_kwargs
 )
 
-dspy.configure(lm=lm)
+try:
+    dspy.configure(lm=lm)
+except RuntimeError:
+    # ถูกตั้งค่าไว้แล้วจาก thread อื่น (เกิดตอน Streamlit โหลดโค้ดใหม่) ใช้ค่าเดิมต่อได้
+    pass
 
 
 # IDs are generated from forms.json / faq.json,
