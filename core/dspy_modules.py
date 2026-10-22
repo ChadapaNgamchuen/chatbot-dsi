@@ -83,6 +83,9 @@ class RequestProcessor(dspy.Signature):
     reply = short polite Thai answer; say the bot helps with forms (SOP1)
     and problem reports (SOP2) when the request is out of scope.
 
+    If a GENERAL reply suggests a form, also set form_id to that form.
+    Never show internal ids (f001, faq002) in reply; call forms by their Thai name.
+
     rule_hints are keyword signals from a fast pre-check; use them as hints only.
     Use only the provided forms/FAQs. For fields that do not apply use "none" / "".
     """
@@ -115,7 +118,7 @@ class RequestProcessor(dspy.Signature):
     ] = dspy.OutputField()
 
     form_id: FormId = dspy.OutputField(
-        desc="SOP1 only, otherwise none"
+        desc="SOP1, or a GENERAL reply that suggests a form; otherwise none"
     )
 
     faq_id: FaqId = dspy.OutputField(

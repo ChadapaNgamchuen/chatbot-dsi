@@ -433,6 +433,23 @@ def handle_llm(user_message, conversation_history, tester_id, state, issue):
             "และรับแจ้งปัญหาหรือข้อร้องเรียนได้ค่ะ"
         )
 
+    # The reply only suggests a form ("มีวิชาเรียนไม่รู้เรื่อง" -> add/drop):
+    # give advice without download buttons, but remember the form so
+    # "ขอไฟล์" on the next turn sends it. Staff-written advice (forms.json)
+    # replaces the LLM wording when available.
+    suggested = get_form_by_id(str(result.form_id).strip().lower())
+
+    if suggested:
+
+        return {
+            "answer": (
+                suggested.get("advice", reply)
+                + "\n\nหากต้องการแบบฟอร์ม พิมพ์ \"ขอไฟล์\" ได้เลยค่ะ"
+            ),
+            "intent": "GENERAL",
+            "suggested_form_id": suggested["form_id"],
+        }
+
     return {
         "answer": reply,
         "intent": "GENERAL",
@@ -659,9 +676,14 @@ def process_message(
             "intent": "ERROR",
         }
 
-    # Remember the last form so "ขอไฟล์หน่อย" on the next turn knows which one
+    # Remember the form of THIS answer only, so "ขอไฟล์หน่อย" on the next turn
+    # never resends an older form; no form -> forget (the LLM reads the history)
     if extra_data.get("form"):
         state["last_form_id"] = extra_data["form"]["form_id"]
+    elif extra_data.get("suggested_form_id"):
+        state["last_form_id"] = extra_data["suggested_form_id"]
+    else:
+        state.pop("last_form_id", None)
 
     response_time = time.perf_counter() - start_time
 
