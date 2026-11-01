@@ -5,3 +5,6 @@ litellm
 pandas
 dspy
 supabase
+fastapi
+uvicorn
+requests
