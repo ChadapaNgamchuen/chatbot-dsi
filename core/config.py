@@ -27,7 +27,7 @@ MOCK_MODE = (
 # LLM Settings
 LLM_MODEL = os.getenv(
     "LLM_MODEL",
-    "gemini/gemini-3.8-flash"
+    "groq/openai/gpt-oss-120b"
 )
 
 LLM_API_KEY = os.getenv(
