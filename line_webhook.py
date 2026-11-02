@@ -5,7 +5,7 @@ import hashlib
 import base64
 import logging
 import requests
-
+from core.logger import save_interaction
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks
 
 app = FastAPI()
@@ -40,6 +40,7 @@ def send_to_line(user_id: str, text: str):
 
 
 
+
 def handle_message(user_id: str, user_text: str):
     try:
         mode = os.getenv("BOT_MODE", "echo")
@@ -48,7 +49,6 @@ def handle_message(user_id: str, user_text: str):
             answer = f"LINE เชื่อมต่อสำเร็จ! คุณส่งว่า: {user_text}"
 
         else:
-            # Reuse the existing Chatbot Engine
             from core.chat_engine import process_message
 
             tester_id = "line_" + hashlib.sha256(
@@ -58,12 +58,12 @@ def handle_message(user_id: str, user_text: str):
             result = process_message(
                 user_message=user_text,
                 tester_id=tester_id,
-                conversation_history=[],
+                conversation_history="",
             )
 
             answer = result.get("answer") or "ไม่พบคำตอบค่ะ"
 
-            # เพิ่มตรงนี้: ดึงลิงก์ PDF จาก forms.json
+            # เพิ่มลิงก์ PDF ในคำตอบ
             form = result.get("form") or {}
 
             for pdf in form.get("pdf_files", []):
@@ -73,12 +73,28 @@ def handle_message(user_id: str, user_text: str):
                 if pdf_url:
                     answer += f"\n\n📥 {label}\n{pdf_url}"
 
+            # บันทึกประวัติ LINE ลง Supabase
+            try:
+                save_interaction(
+                    tester_id=tester_id,
+                    question=user_text,
+                    answer=answer,
+                    response_time=result.get("response_time", 0.0),
+                    success=result.get("success", False),
+                )
+
+                logger.info("LINE chat saved to Supabase")
+
+            except Exception:
+                logger.exception("Failed to save LINE chat")
+
     except Exception:
         logger.exception("Chatbot processing failed")
         answer = "ขออภัยค่ะ ระบบขัดข้อง กรุณาลองใหม่อีกครั้ง"
 
     try:
         send_to_line(user_id, answer)
+
     except Exception:
         logger.exception("Sending LINE message failed")
 
