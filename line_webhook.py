@@ -1,4 +1,3 @@
-
 import os
 import json
 import hmac
@@ -40,6 +39,7 @@ def send_to_line(user_id: str, text: str):
     response.raise_for_status()
 
 
+
 def handle_message(user_id: str, user_text: str):
     try:
         mode = os.getenv("BOT_MODE", "echo")
@@ -63,6 +63,16 @@ def handle_message(user_id: str, user_text: str):
 
             answer = result.get("answer") or "ไม่พบคำตอบค่ะ"
 
+            # เพิ่มตรงนี้: ดึงลิงก์ PDF จาก forms.json
+            form = result.get("form") or {}
+
+            for pdf in form.get("pdf_files", []):
+                pdf_url = pdf.get("url")
+                label = pdf.get("label", "แบบฟอร์ม")
+
+                if pdf_url:
+                    answer += f"\n\n📥 {label}\n{pdf_url}"
+
     except Exception:
         logger.exception("Chatbot processing failed")
         answer = "ขออภัยค่ะ ระบบขัดข้อง กรุณาลองใหม่อีกครั้ง"
@@ -71,6 +81,7 @@ def handle_message(user_id: str, user_text: str):
         send_to_line(user_id, answer)
     except Exception:
         logger.exception("Sending LINE message failed")
+
 
 
 @app.post("/callback")

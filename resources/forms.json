@@ -50,7 +50,9 @@
         "pdf_files": [
             {
                 "label": "แบบฟอร์มคำร้องเพิ่ม-ถอนรายวิชา กรณีพิเศษ",
-                "file": "resources/forms/แบบฟอร์มคำร้องเพิ่ม-ถอนรายวิชา กรณีพิเศษ.pdf"
+                "file": "resources/forms/แบบฟอร์มคำร้องเพิ่ม-ถอนรายวิชา กรณีพิเศษ.pdf",
+                "url": "https://drive.google.com/drive/u/2/folders/1UTcL8viHCkKKLsBuRT8dNGiQevrkXv9e"
+
             }
         ],
         "requirements": [
@@ -82,11 +84,13 @@
         "pdf_files": [
             {
                 "label": "แบบฟอร์มคำร้องลาออก",
-                "file": "resources/forms/แบบฟอร์ม คำร้องลาออก.pdf"
+                "file": "resources/forms/แบบฟอร์ม คำร้องลาออก.pdf",
+                "url": "https://drive.google.com/drive/u/2/folders/1o7tGHTgXG1JwXWeXfObD2hBEC_ZMpdIY"
             },
             {
                 "label": "แบบฟอร์มคำยินยอมจากผู้ปกครอง",
-                "file": "resources/forms/แบบฟอร์มคำยินยอมจากผู้ปกครอง.pdf"
+                "file": "resources/forms/แบบฟอร์มคำยินยอมจากผู้ปกครอง.pdf",
+                "url": "https://drive.google.com/drive/u/2/folders/1FmV5huAAumztYB0ex_hK3dUBrBq8Yseg"
             }
         ],
         "requirements": [
@@ -126,11 +130,13 @@
         "pdf_files": [
             {
                 "label": "แบบฟอร์มคำร้องลาพัก",
-                "file": "resources/forms/แบบฟอร์มคำร้องลาพัก + คำยินยอมผู้ปกครอง.pdf"
+                "file": "resources/forms/แบบฟอร์มคำร้องลาพัก + คำยินยอมผู้ปกครอง.pdf",
+                "url": "https://drive.google.com/drive/u/2/folders/17Jzwjm5n2j99Vo-twnkdyJq0VxaAqS1M"
             },
             {
                 "label": "แบบฟอร์มคำยินยอมจากผู้ปกครอง",
-                "file": "resources/forms/แบบฟอร์มคำยินยอมจากผู้ปกครอง.pdf"
+                "file": "resources/forms/แบบฟอร์มคำยินยอมจากผู้ปกครอง.pdf",
+                "url": "https://drive.google.com/drive/u/2/folders/1FmV5huAAumztYB0ex_hK3dUBrBq8Yseg"
             }
         ],
         "requirements": [
@@ -138,6 +144,7 @@
             "สำเนาบัตรประชาชนผู้ปกครอง",
             "ใบยินยอมผู้ปกครอง"
         ]
+    
     },
     {
         "form_id": "f004",
@@ -184,7 +191,8 @@
         "pdf_files": [
             {
                 "label": "แบบฟอร์มคำร้องขอจดทะเบียนล่าช้า",
-                "file": "resources/forms/คำร้องขอจดทะเบียนล่าช้า.pdf"
+                "file": "resources/forms/คำร้องขอจดทะเบียนล่าช้า.pdf",
+                "url": "https://drive.google.com/drive/u/2/folders/1AmVs-TEtc_GnpazLKnQ2WBJCUG78Zyg6"
             }
         ],
         "requirements": [
@@ -214,7 +222,8 @@
         "pdf_files": [
             {
                 "label": "แบบฟอร์มคำร้องขอจดทะเบียนข้ามโครงการ",
-                "file": "resources/forms/คำร้องขอจดทะเบียนข้ามโครงการ อัพเดท(1).pdf"
+                "file": "resources/forms/คำร้องขอจดทะเบียนข้ามโครงการ อัพเดท(1).pdf",
+                "url": "https://drive.google.com/drive/u/2/folders/1uQMkuXh7D5l10dC70GUF20JITNOx3eJr"
             }
         ],
         "requirements": [
@@ -246,7 +255,8 @@
         "pdf_files": [
             {
                 "label": "แบบฟอร์มคำร้องทั่วไป",
-                "file": "resources/forms/แบบคำร้องทั่วไป.pdf"
+                "file": "resources/forms/แบบคำร้องทั่วไป.pdf",
+                "url": "https://drive.google.com/drive/u/2/folders/1z6BN4U0W1y_Me8C8mQlh-mgXblnoegP7"
             }
         ],
         "requirements": [
